@@ -13,6 +13,77 @@ workflows:
   - workflowId: create-and-download-prescription
     summary: Create a prescription and download the generated PDF
     description: >
-      A veterinarian fills in prescription details, submits the form,
-      and downloads the resulting PDF document.
-    steps: []
+      A veterinarian fills in prescription details, submits the form to
+      create a prescription record, then downloads the resulting PDF document
+      to hand to the owner at a pharmacy.
+    inputs:
+      type: object
+      required: [vet, owner, patient, items]
+      properties:
+        vet:
+          type: object
+          description: Veterinarian details (Art. 105.5(d))
+        owner:
+          type: object
+          description: Owner details (Art. 105.5(b))
+        patient:
+          type: object
+          description: Animal identification (Art. 105.5(a))
+        items:
+          type: array
+          description: Prescribed medicinal products (Art. 105.5(f)(g)(h)(i))
+        warnings:
+          type: string
+        isOffLabel:
+          type: boolean
+        isAntimicrobialSpecialUse:
+          type: boolean
+
+    steps:
+      - stepId: create-prescription
+        description: Submit prescription data and receive the persisted record with its ID
+        operationId: $sourceDescriptions.vetprescription-api#/createPrescription
+        requestBody:
+          contentType: application/json
+          payload:
+            vet: $inputs.vet
+            owner: $inputs.owner
+            patient: $inputs.patient
+            items: $inputs.items
+            warnings: $inputs.warnings
+            isOffLabel: $inputs.isOffLabel
+            isAntimicrobialSpecialUse: $inputs.isAntimicrobialSpecialUse
+        successCriteria:
+          - condition: $statusCode == 201
+        outputs:
+          prescriptionId: $response.body#/id
+          prescriptionNumber: $response.body#/prescriptionNumber
+          prescriptionDate: $response.body#/date
+
+      - stepId: generate-pdf
+        description: >
+          Generate and store the PDF for the newly created prescription.
+        operationId: $sourceDescriptions.vetprescription-api#/generatePrescriptionPdf
+        parameters:
+          - name: id
+            in: path
+            value: $steps.create-prescription.outputs.prescriptionId
+        successCriteria:
+          - condition: $statusCode == 201
+        outputs:
+          pdfUrl: $response.body#/url
+          prescriptionNumber: $response.body#/prescriptionNumber
+
+      - stepId: get-pdf-url
+        description: >
+          Retrieve the URL of the stored PDF so the browser can open or
+          download it directly.
+        operationId: $sourceDescriptions.vetprescription-api#/getPrescriptionPdfUrl
+        parameters:
+          - name: id
+            in: path
+            value: $steps.create-prescription.outputs.prescriptionId
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          pdfUrl: $response.body#/url
