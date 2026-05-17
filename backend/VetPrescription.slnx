@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="VetPrescription.Api/VetPrescription.Api.csproj" />
+  <Project Path="VetPrescription.Domain/VetPrescription.Domain.csproj" />
+  <Project Path="VetPrescription.IntegrationTests/VetPrescription.IntegrationTests.csproj" />
+  <Project Path="VetPrescription.UnitTests/VetPrescription.UnitTests.csproj" />
+</Solution>

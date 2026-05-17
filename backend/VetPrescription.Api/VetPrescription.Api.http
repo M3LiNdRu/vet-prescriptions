@@ -1,0 +1,6 @@
+@VetPrescription.Api_HostAddress = http://localhost:5216
+
+GET {{VetPrescription.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

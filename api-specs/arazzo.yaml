@@ -1,0 +1,18 @@
+arazzo: 1.0.0
+info:
+  title: VetPrescription Workflows
+  version: 0.0.0
+  description: Multi-step workflow scenarios for the VetPrescription API.
+
+sourceDescriptions:
+  - name: vetprescription-api
+    url: ./openapi.yaml
+    type: openapi
+
+workflows:
+  - workflowId: create-and-download-prescription
+    summary: Create a prescription and download the generated PDF
+    description: >
+      A veterinarian fills in prescription details, submits the form,
+      and downloads the resulting PDF document.
+    steps: []
