@@ -14,6 +14,8 @@ servers:
 tags:
   - name: Prescriptions
     description: Veterinary prescription management and PDF generation
+  - name: Vets
+    description: Veterinarian profile management
 
 paths:
   /prescriptions:
@@ -243,6 +245,100 @@ paths:
                 title: "Not Found"
                 status: 404
                 detail: "No PDF has been generated yet for prescription '6647a2f3e4b0c1d2e3f40001'."
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+  /vets/profile:
+    post:
+      operationId: saveVetProfile
+      tags: [Vets]
+      summary: Save or update the veterinarian profile
+      description: >
+        Upserts the veterinarian profile. The profile is used to pre-fill
+        the prescription form on subsequent visits.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VetProfileRequest'
+            example:
+              name: "Dr. Joan Puig Domènech"
+              licenceNumber: "CAT-1234"
+              clinicName: "Clínica Veterinària Puig"
+              address: "Carrer Major 10, 08001 Barcelona"
+              phone: "+34 93 123 45 67"
+              email: "joan.puig@clinicapuig.cat"
+      responses:
+        '200':
+          description: Profile saved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VetProfileResponse'
+              example:
+                name: "Dr. Joan Puig Domènech"
+                licenceNumber: "CAT-1234"
+                clinicName: "Clínica Veterinària Puig"
+                address: "Carrer Major 10, 08001 Barcelona"
+                phone: "+34 93 123 45 67"
+                email: "joan.puig@clinicapuig.cat"
+        '400':
+          description: Validation error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              example:
+                type: "https://tools.ietf.org/html/rfc7807"
+                title: "Validation Failed"
+                status: 400
+                detail: "One or more validation errors occurred."
+                errors:
+                  "name": ["'Name' must not be empty."]
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+    get:
+      operationId: getVetProfile
+      tags: [Vets]
+      summary: Retrieve the saved veterinarian profile
+      description: >
+        Returns the veterinarian profile previously saved via POST /vets/profile.
+        Returns 404 if no profile has been saved yet.
+      responses:
+        '200':
+          description: Vet profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VetProfileResponse'
+              example:
+                name: "Dr. Joan Puig Domènech"
+                licenceNumber: "CAT-1234"
+                clinicName: "Clínica Veterinària Puig"
+                address: "Carrer Major 10, 08001 Barcelona"
+                phone: "+34 93 123 45 67"
+                email: "joan.puig@clinicapuig.cat"
+        '404':
+          description: No profile saved yet
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              example:
+                type: "https://tools.ietf.org/html/rfc7807"
+                title: "Not Found"
+                status: 404
+                detail: "No vet profile has been saved yet."
         '500':
           description: Internal server error
           content:
@@ -490,6 +586,56 @@ components:
           type: string
           description: Human-readable prescription reference
           example: "RX-2026-0001"
+
+    # ── Vet Profile ────────────────────────────────────────────────────────
+
+    VetProfileRequest:
+      type: object
+      description: Veterinarian profile data for saving/updating
+      required: [name, licenceNumber, clinicName, address, phone, email]
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        licenceNumber:
+          type: string
+          minLength: 1
+          maxLength: 50
+        clinicName:
+          type: string
+          minLength: 1
+          maxLength: 200
+        address:
+          type: string
+          minLength: 1
+          maxLength: 300
+        phone:
+          type: string
+          minLength: 1
+          maxLength: 30
+        email:
+          type: string
+          format: email
+
+    VetProfileResponse:
+      type: object
+      description: Saved veterinarian profile
+      required: [name, licenceNumber, clinicName, address, phone, email]
+      properties:
+        name:
+          type: string
+        licenceNumber:
+          type: string
+        clinicName:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+          format: email
 
     # ── Error ──────────────────────────────────────────────────────────────
 

@@ -4,6 +4,8 @@ using VetPrescription.Api.Features.Prescriptions.Create;
 using VetPrescription.Api.Features.Prescriptions.GeneratePdf;
 using VetPrescription.Api.Features.Prescriptions.GetById;
 using VetPrescription.Api.Features.Prescriptions.GetPrescriptionPdfUrl;
+using VetPrescription.Api.Features.Vets.GetVetProfile;
+using VetPrescription.Api.Features.Vets.SaveVetProfile;
 using VetPrescription.Api.Infrastructure;
 
 Log.Logger = new LoggerConfiguration()
@@ -30,6 +32,12 @@ try
 
     builder.Services.AddScoped<IGetPrescriptionPdfUrlRepository, GetPrescriptionPdfUrlRepository>();
     builder.Services.AddScoped<GetPrescriptionPdfUrlHandler>();
+
+    builder.Services.AddScoped<ISaveVetProfileRepository, SaveVetProfileRepository>();
+    builder.Services.AddScoped<SaveVetProfileHandler>();
+
+    builder.Services.AddScoped<IGetVetProfileRepository, GetVetProfileRepository>();
+    builder.Services.AddScoped<GetVetProfileHandler>();
 
     builder.Services.AddCors(options =>
         options.AddDefaultPolicy(policy =>
@@ -66,6 +74,8 @@ try
     GetPrescriptionByIdEndpoint.Map(app);
     GeneratePdfEndpoint.Map(app);
     GetPrescriptionPdfUrlEndpoint.Map(app);
+    SaveVetProfileEndpoint.Map(app);
+    GetVetProfileEndpoint.Map(app);
 
     app.Run();
 }

@@ -10,6 +10,46 @@ sourceDescriptions:
     type: openapi
 
 workflows:
+  - workflowId: prefill-and-create-prescription
+    summary: Load vet profile, pre-fill form, create prescription and download PDF
+    description: >
+      On app load, the vet profile is fetched and used to pre-fill the
+      prescription form. The veterinarian then completes the form and
+      submits it to create a prescription record and download the PDF.
+    steps:
+      - stepId: get-vet-profile
+        description: Fetch the saved vet profile to pre-fill the prescription form
+        operationId: $sourceDescriptions.vetprescription-api#/getVetProfile
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          vet: $response.body
+
+      - stepId: create-prescription
+        description: Submit the completed prescription form
+        operationId: $sourceDescriptions.vetprescription-api#/createPrescription
+        requestBody:
+          contentType: application/json
+          payload:
+            vet: $steps.get-vet-profile.outputs.vet
+        successCriteria:
+          - condition: $statusCode == 201
+        outputs:
+          prescriptionId: $response.body#/id
+          prescriptionNumber: $response.body#/prescriptionNumber
+
+      - stepId: generate-pdf
+        description: Generate and store the PDF for the prescription
+        operationId: $sourceDescriptions.vetprescription-api#/generatePrescriptionPdf
+        parameters:
+          - name: id
+            in: path
+            value: $steps.create-prescription.outputs.prescriptionId
+        successCriteria:
+          - condition: $statusCode == 201
+        outputs:
+          pdfUrl: $response.body#/url
+
   - workflowId: create-and-download-prescription
     summary: Create a prescription and download the generated PDF
     description: >

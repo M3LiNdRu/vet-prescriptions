@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   createPrescription,
   generatePdf,
@@ -7,6 +7,7 @@ import {
   type PdfResponse,
   type PrescriptionItemRequest,
 } from './api'
+import { getVetProfile } from '../../vets/profile/api'
 
 const emptyItem = (): PrescriptionItemRequest => ({
   drugName: '',
@@ -30,6 +31,21 @@ export function CreatePrescriptionForm() {
   const [vetAddress, setVetAddress] = useState('')
   const [vetPhone, setVetPhone] = useState('')
   const [vetEmail, setVetEmail] = useState('')
+
+  useEffect(() => {
+    getVetProfile()
+      .then((profile) => {
+        setVetName(profile.name)
+        setVetLicence(profile.licenceNumber)
+        setVetClinic(profile.clinicName)
+        setVetAddress(profile.address)
+        setVetPhone(profile.phone)
+        setVetEmail(profile.email)
+      })
+      .catch(() => {
+        // no profile saved yet — leave fields empty
+      })
+  }, [])
 
   const [ownerName, setOwnerName] = useState('')
   const [ownerAddress, setOwnerAddress] = useState('')
