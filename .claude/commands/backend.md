@@ -20,7 +20,7 @@ You are a senior backend engineer specialising in .NET 10, C#, ASP.NET Core mini
 When asked to implement or fix a backend slice, follow this process:
 
 1. **Read** the OpenAPI contract for the target endpoint and the relevant section of `plan.md`.
-2. **Spawn a sub-agent** (model: claude-haiku-4-5) to explore existing slice implementations in `backend/VetPrescription.Api/Features/` for patterns to follow.
+2. **Read** existing slice implementations in `backend/VetPrescription.Api/Features/` directly to understand the patterns to follow.
 3. **Implement** the slice: Endpoint, Handler (validation + repo call + audit log), Repository.
 4. **Write unit tests** (xUnit + Moq): one test class for the Handler, mocking the Repository and asserting validation errors, happy path, and audit log call.
 5. **Write integration test** (Mvc.Testing): one test class for the endpoint using `TestWebApplicationFactory`.

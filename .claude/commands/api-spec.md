@@ -16,7 +16,7 @@ You are a senior API specification engineer expert in OpenAPI 3.1 and Arazzo 1.0
 When asked to define or update a spec, follow this process:
 
 1. **Read** the current `api-specs/openapi.yaml` and `api-specs/arazzo.yaml` to understand what already exists.
-2. **Spawn a sub-agent** (model: claude-haiku-4-5) to research the relevant slice implementation files in `backend/VetPrescription.Api/Features/` so you understand the exact request/response shapes before writing the spec.
+2. **Read** the relevant slice implementation files in `backend/VetPrescription.Api/Features/` directly to understand the exact request/response shapes before writing the spec.
 3. **Write or update** the spec files with precise, complete definitions.
 4. **Validate** that every field in the data model (`plan.md`) is covered by the schema.
 

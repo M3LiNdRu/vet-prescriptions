@@ -73,4 +73,18 @@
 
 ---
 
+## Phase 7 — Fly.io Deployment
+
+- [x] T-040 Add `fly/mongo/fly.toml` — MongoDB app config with persistent volume (`mongo_data`)
+- [x] T-041 Add `fly/api/fly.toml` — .NET API app config; MongoDB URI injected as Fly secret
+- [x] T-042 Add `fly/frontend/fly.toml` — nginx frontend app config with `API_UPSTREAM` build arg pointing to Fly internal DNS
+- [x] T-043 Update `frontend/nginx.conf` and `frontend/Dockerfile` to support `API_UPSTREAM` build arg (default: `http://api:8080` for local; override for Fly)
+- [x] T-044 Add `.github/workflows/deploy.yml` — deploy all three apps to Fly.io after CI passes on `master`
+- [ ] T-045 Create Fly.io apps and volume: `fly apps create vet-prescription-mongo`, `fly apps create vet-prescription-api`, `fly apps create vet-prescription-frontend`, `fly volume create mongo_data --app vet-prescription-mongo --region mad`
+- [ ] T-046 Set Fly secrets: `fly secrets set ConnectionStrings__MongoDB="mongodb://vet-prescription-mongo.internal:27017" --app vet-prescription-api`
+- [ ] T-047 Add `FLY_API_TOKEN` secret to GitHub repository settings
+- [ ] T-048 Write `docs/fly-deploy.md` — beginner guide (concepts, CLI install, first deploy, secrets, logs)
+
+---
+
 `[P]` = can run in parallel with other `[P]` tasks in the same phase (different files, no dependencies)
