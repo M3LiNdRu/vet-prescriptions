@@ -27,7 +27,9 @@ jobs:
           FLY_API_TOKEN: ${{ env.FLY_API_TOKEN_MONGO }}
 
       - name: Deploy API
-        run: flyctl deploy --config backend/fly.toml --app vet-prescription-api --remote-only
+        run: flyctl deploy --app vet-prescription-api --remote-only
+        working-directory: backend
 
       - name: Deploy Frontend
-        run: flyctl deploy --config frontend/fly.toml --app vet-prescription-ui --remote-only
+        run: flyctl deploy --app vet-prescription-ui --remote-only
+        working-directory: frontend
