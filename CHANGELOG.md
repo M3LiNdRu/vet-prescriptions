@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/M3LiNdRu/vet-prescriptions/compare/v1.0.0...v1.1.0) (2026-05-25)
+
+
+### Features
+
+* Phase 6 polish — global error handler, validation feedback, loading states, docs ([cd21eeb](https://github.com/M3LiNdRu/vet-prescriptions/commit/cd21eeb6439289d5cf78f720a9e824b15f4fb803))
+
 # 1.0.0 (2026-05-25)
 
 
