@@ -1,26 +1,26 @@
 Summary
-  Generated on: 25/5/2026 - 15:17:10
-  Coverage date: 25/5/2026 - 15:03:45 - 25/5/2026 - 15:03:52
+  Generated on: 25/5/2026 - 16:01:07
+  Coverage date: 25/5/2026 - 16:00:52 - 25/5/2026 - 16:00:59
   Parser: MultiReport (2x Cobertura)
   Assemblies: 2
-  Classes: 53
-  Files: 32
-  Line coverage: 98.4%
-  Covered lines: 741
-  Uncovered lines: 12
-  Coverable lines: 753
-  Total lines: 1216
+  Classes: 54
+  Files: 33
+  Line coverage: 97%
+  Covered lines: 745
+  Uncovered lines: 23
+  Coverable lines: 768
+  Total lines: 1247
   Branch coverage: 80.3% (45 of 56)
   Covered branches: 45
   Total branches: 56
-  Method coverage: 99.4% (175 of 176)
-  Full method coverage: 98.2% (173 of 176)
-  Covered methods: 175
-  Fully covered methods: 173
-  Total methods: 176
+  Method coverage: 98.8% (176 of 178)
+  Full method coverage: 97.7% (174 of 178)
+  Covered methods: 176
+  Fully covered methods: 174
+  Total methods: 178
 
-VetPrescription.Api                                                                                  98.3%
-  Program                                                                                            94.8%
+VetPrescription.Api                                                                                  96.8%
+  Program                                                                                              95%
   System.Runtime.CompilerServices                                                                       0%
   VetPrescription.Api.Features.Prescriptions.Create.CreatePrescriptionEndpoint                        100%
   VetPrescription.Api.Features.Prescriptions.Create.CreatePrescriptionHandler                         100%
@@ -64,6 +64,7 @@ VetPrescription.Api                                                             
   VetPrescription.Api.Features.Vets.SaveVetProfile.SaveVetProfileValidator                            100%
   VetPrescription.Api.Features.Vets.SaveVetProfile.VetProfileRequest                                  100%
   VetPrescription.Api.Features.Vets.SaveVetProfile.VetProfileResponse                                 100%
+  VetPrescription.Api.Infrastructure.GlobalExceptionHandler                                           8.3%
   VetPrescription.Api.Infrastructure.MongoDbContext                                                   100%
   VetPrescription.Api.Infrastructure.PdfGenerator                                                     100%
   VetPrescription.Api.Infrastructure.PrescriptionDocument                                            93.6%
