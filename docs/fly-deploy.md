@@ -110,11 +110,10 @@ The hostname `vet-prescription-mongo.internal` is Fly's private DNS — it only 
 ## Step 7 — Add Fly API tokens to GitHub
 
 1. Go to your GitHub repository → **Settings** → **Secrets and variables** → **Actions**
-2. Click **New repository secret**
-3. Name: `FLY_API_TOKEN`
-4. Value: paste the token from Step 3 (used for API + frontend deploys)
-5. Click **Add secret**
-6. (Optional) Add `FLY_API_TOKEN_MONGO` with a Mongo app-scoped deploy token if you want MongoDB to be deployed automatically from GitHub Actions.
+2. Add either:
+   - `FLY_API_TOKEN` — a token that can deploy both the API and frontend apps, or
+   - `FLY_API_TOKEN_API` and `FLY_API_TOKEN_FRONTEND` — separate app-scoped deploy tokens for each app
+3. (Optional) Add `FLY_API_TOKEN_MONGO` with a Mongo app-scoped deploy token if you want MongoDB to be deployed automatically from GitHub Actions.
 
 From now on, every push to `master` that passes CI will automatically deploy to Fly.io.
 
