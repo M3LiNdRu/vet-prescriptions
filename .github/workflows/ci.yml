@@ -35,7 +35,9 @@ jobs:
         run: |
           dotnet tool install --global dotnet-reportgenerator-globaltool
           reportgenerator -reports:"./coverage/**/coverage.cobertura.xml" \
-            -targetdir:"./coverage/report" -reporttypes:TextSummary
+            -targetdir:"./coverage/report" -reporttypes:TextSummary \
+            "-assemblyfilters:-VetPrescription.IntegrationTests;-VetPrescription.UnitTests" \
+            "-classfilters:-Microsoft.AspNetCore.OpenApi.*;-System.Runtime.CompilerServices.*"
           cat ./coverage/report/Summary.txt
           LINE_COVERAGE=$(grep "Line coverage" ./coverage/report/Summary.txt | grep -oP '\d+\.\d+')
           echo "Line coverage: $LINE_COVERAGE%"
