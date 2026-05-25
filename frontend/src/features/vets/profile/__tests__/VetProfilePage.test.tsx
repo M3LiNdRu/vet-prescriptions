@@ -26,6 +26,7 @@ describe('VetProfilePage', () => {
   it('renders all fields', async () => {
     mockedGet.mockRejectedValue({ response: { status: 404 } })
     render(<VetProfilePage />)
+    await waitFor(() => expect(screen.queryByRole('status', { name: /loading/i })).not.toBeInTheDocument())
     expect(screen.getByLabelText('Name')).toBeInTheDocument()
     expect(screen.getByLabelText('Licence Number')).toBeInTheDocument()
     expect(screen.getByLabelText('Clinic Name')).toBeInTheDocument()
@@ -61,6 +62,7 @@ describe('VetProfilePage', () => {
     const user = userEvent.setup()
     render(<VetProfilePage />)
 
+    await waitFor(() => expect(screen.getByLabelText('Name')).toBeInTheDocument())
     await user.type(screen.getByLabelText('Name'), 'Dr. Joan')
     await user.type(screen.getByLabelText('Licence Number'), 'CAT-1')
     await user.type(screen.getByLabelText('Clinic Name'), 'Clinic')
@@ -81,6 +83,7 @@ describe('VetProfilePage', () => {
     const user = userEvent.setup()
     render(<VetProfilePage />)
 
+    await waitFor(() => expect(screen.getByLabelText('Name')).toBeInTheDocument())
     await user.type(screen.getByLabelText('Name'), 'Dr. Joan')
     await user.type(screen.getByLabelText('Licence Number'), 'CAT-1')
     await user.type(screen.getByLabelText('Clinic Name'), 'Clinic')

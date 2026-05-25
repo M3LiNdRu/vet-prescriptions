@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -105,6 +106,51 @@ describe('CreatePrescriptionForm', () => {
       expect(screen.getByRole('link', { name: 'Open PDF' })).toBeInTheDocument(),
     )
     expect(mockedGenerate).toHaveBeenCalledWith('id1')
+  })
+
+  it('shows field-level errors on 422 response', async () => {
+    const axiosError = new axios.AxiosError('Validation failed')
+    axiosError.response = {
+      status: 422,
+      data: { errors: { 'Vet.Name': ["'Name' must not be empty."] } },
+      statusText: 'Unprocessable Entity',
+      headers: {},
+      config: {} as never,
+    }
+    mockedCreate.mockRejectedValue(axiosError)
+
+    const user = userEvent.setup()
+    render(<CreatePrescriptionForm />)
+    await fillForm(user)()
+    await user.click(screen.getByRole('button', { name: 'Create Prescription' }))
+
+    await waitFor(() =>
+      expect(screen.getByText("'Name' must not be empty.")).toBeInTheDocument(),
+    )
+    expect(screen.getByRole('alert')).toHaveTextContent('Please fix the validation errors')
+  })
+
+  it('shows error when PDF generation fails', async () => {
+    mockedCreate.mockResolvedValue({
+      id: 'id1',
+      prescriptionNumber: 'RX-2026-0001',
+      date: '2026-05-17',
+    })
+    mockedGenerate.mockRejectedValue(new Error('PDF error'))
+
+    const user = userEvent.setup()
+    render(<CreatePrescriptionForm />)
+    await fillForm(user)()
+    await user.click(screen.getByRole('button', { name: 'Create Prescription' }))
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Generate PDF' })).toBeInTheDocument(),
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Generate PDF' }))
+
+    await waitFor(() =>
+      expect(screen.getByRole('alert')).toHaveTextContent('Error generating PDF'),
+    )
   })
 
   it('can add and remove prescription items', async () => {

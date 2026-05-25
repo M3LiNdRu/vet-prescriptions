@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { useEffect, useState } from 'react'
 import {
   createPrescription,
@@ -63,6 +64,7 @@ export function CreatePrescriptionForm() {
 
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({})
   const [success, setSuccess] = useState<SuccessState | null>(null)
 
   function updateItem(
@@ -81,6 +83,12 @@ export function CreatePrescriptionForm() {
 
   function removeItem(index: number) {
     setItems((prev) => prev.filter((_, i) => i !== index))
+  }
+
+  function fieldError(key: string) {
+    const msgs = fieldErrors[key]
+    if (!msgs?.length) return null
+    return <p className="mt-1 text-xs text-red-600">{msgs.join(' ')}</p>
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -115,9 +123,16 @@ export function CreatePrescriptionForm() {
 
     try {
       const prescription = await createPrescription(req)
+      setFieldErrors({})
       setSuccess({ prescription, pdf: null, pdfLoading: false, pdfError: null })
-    } catch {
-      setError('Error creating prescription. Please try again.')
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response?.status === 422) {
+        const errors = err.response.data?.errors as Record<string, string[]> | undefined
+        setFieldErrors(errors ?? {})
+        setError('Please fix the validation errors below.')
+      } else {
+        setError('Error creating prescription. Please try again.')
+      }
     } finally {
       setSubmitting(false)
     }
@@ -200,6 +215,7 @@ export function CreatePrescriptionForm() {
             onChange={(e) => setVetName(e.target.value)}
             className="w-full border rounded-lg px-3 py-2"
           />
+          {fieldError('Vet.Name')}
         </div>
         <div>
           <label htmlFor="vetLicence" className="block text-sm font-medium mb-1">
@@ -213,6 +229,7 @@ export function CreatePrescriptionForm() {
             onChange={(e) => setVetLicence(e.target.value)}
             className="w-full border rounded-lg px-3 py-2"
           />
+          {fieldError('Vet.LicenceNumber')}
         </div>
         <div>
           <label htmlFor="vetClinic" className="block text-sm font-medium mb-1">
@@ -226,6 +243,7 @@ export function CreatePrescriptionForm() {
             onChange={(e) => setVetClinic(e.target.value)}
             className="w-full border rounded-lg px-3 py-2"
           />
+          {fieldError('Vet.ClinicName')}
         </div>
         <div>
           <label htmlFor="vetAddress" className="block text-sm font-medium mb-1">
@@ -239,6 +257,7 @@ export function CreatePrescriptionForm() {
             onChange={(e) => setVetAddress(e.target.value)}
             className="w-full border rounded-lg px-3 py-2"
           />
+          {fieldError('Vet.Address')}
         </div>
         <div>
           <label htmlFor="vetPhone" className="block text-sm font-medium mb-1">
@@ -252,6 +271,7 @@ export function CreatePrescriptionForm() {
             onChange={(e) => setVetPhone(e.target.value)}
             className="w-full border rounded-lg px-3 py-2"
           />
+          {fieldError('Vet.Phone')}
         </div>
         <div>
           <label htmlFor="vetEmail" className="block text-sm font-medium mb-1">
@@ -265,6 +285,7 @@ export function CreatePrescriptionForm() {
             onChange={(e) => setVetEmail(e.target.value)}
             className="w-full border rounded-lg px-3 py-2"
           />
+          {fieldError('Vet.Email')}
         </div>
       </fieldset>
 
@@ -283,6 +304,7 @@ export function CreatePrescriptionForm() {
             onChange={(e) => setOwnerName(e.target.value)}
             className="w-full border rounded-lg px-3 py-2"
           />
+          {fieldError('Owner.Name')}
         </div>
         <div>
           <label htmlFor="ownerAddress" className="block text-sm font-medium mb-1">
@@ -296,6 +318,7 @@ export function CreatePrescriptionForm() {
             onChange={(e) => setOwnerAddress(e.target.value)}
             className="w-full border rounded-lg px-3 py-2"
           />
+          {fieldError('Owner.Address')}
         </div>
         <div>
           <label htmlFor="ownerPhone" className="block text-sm font-medium mb-1">
@@ -309,6 +332,7 @@ export function CreatePrescriptionForm() {
             onChange={(e) => setOwnerPhone(e.target.value)}
             className="w-full border rounded-lg px-3 py-2"
           />
+          {fieldError('Owner.Phone')}
         </div>
         <div>
           <label htmlFor="ownerCifDni" className="block text-sm font-medium mb-1">
@@ -322,6 +346,7 @@ export function CreatePrescriptionForm() {
             onChange={(e) => setOwnerCifDni(e.target.value)}
             className="w-full border rounded-lg px-3 py-2"
           />
+          {fieldError('Owner.CifDni')}
         </div>
       </fieldset>
 
@@ -340,6 +365,7 @@ export function CreatePrescriptionForm() {
             onChange={(e) => setAnimalName(e.target.value)}
             className="w-full border rounded-lg px-3 py-2"
           />
+          {fieldError('Patient.AnimalName')}
         </div>
         <div>
           <label htmlFor="species" className="block text-sm font-medium mb-1">
@@ -353,6 +379,7 @@ export function CreatePrescriptionForm() {
             onChange={(e) => setSpecies(e.target.value)}
             className="w-full border rounded-lg px-3 py-2"
           />
+          {fieldError('Patient.Species')}
         </div>
         <div>
           <label htmlFor="breed" className="block text-sm font-medium mb-1">
@@ -366,6 +393,7 @@ export function CreatePrescriptionForm() {
             onChange={(e) => setBreed(e.target.value)}
             className="w-full border rounded-lg px-3 py-2"
           />
+          {fieldError('Patient.Breed')}
         </div>
       </fieldset>
 
@@ -402,6 +430,7 @@ export function CreatePrescriptionForm() {
                 onChange={(e) => updateItem(index, 'drugName', e.target.value)}
                 className="w-full border rounded-lg px-3 py-2"
               />
+              {fieldError(`Items[${index}].DrugName`)}
             </div>
             <div>
               <label
@@ -418,6 +447,7 @@ export function CreatePrescriptionForm() {
                 onChange={(e) => updateItem(index, 'quantity', e.target.value)}
                 className="w-full border rounded-lg px-3 py-2"
               />
+              {fieldError(`Items[${index}].Quantity`)}
             </div>
             <div>
               <label
@@ -436,6 +466,7 @@ export function CreatePrescriptionForm() {
                 }
                 className="w-full border rounded-lg px-3 py-2"
               />
+              {fieldError(`Items[${index}].PharmaceuticalForm`)}
             </div>
             <div>
               <label
@@ -454,6 +485,7 @@ export function CreatePrescriptionForm() {
                 }
                 className="w-full border rounded-lg px-3 py-2"
               />
+              {fieldError(`Items[${index}].DosageRegimen`)}
             </div>
             <div>
               <label

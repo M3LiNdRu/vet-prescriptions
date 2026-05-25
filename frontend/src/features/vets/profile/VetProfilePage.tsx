@@ -9,6 +9,7 @@ export function VetProfilePage() {
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
 
+  const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -26,6 +27,7 @@ export function VetProfilePage() {
       .catch(() => {
         // 404 or network error — leave form empty
       })
+      .finally(() => setLoading(false))
   }, [])
 
   async function handleSubmit(e: React.FormEvent) {
@@ -46,6 +48,14 @@ export function VetProfilePage() {
     } finally {
       setSubmitting(false)
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="p-4 max-w-lg mx-auto">
+        <p role="status" className="text-gray-500">Loading profile…</p>
+      </div>
+    )
   }
 
   return (

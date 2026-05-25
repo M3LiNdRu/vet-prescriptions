@@ -20,6 +20,9 @@ try
     builder.Host.UseSerilog((ctx, services, config) =>
         config.ReadFrom.Configuration(ctx.Configuration));
 
+    builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+    builder.Services.AddProblemDetails();
+
     builder.Services.AddSingleton<MongoDbContext>();
 
     builder.Services.AddScoped<IListPrescriptionsRepository, ListPrescriptionsRepository>();
@@ -57,6 +60,7 @@ try
 
     var app = builder.Build();
 
+    app.UseExceptionHandler();
     app.UseSerilogRequestLogging();
     app.UseCors();
 
