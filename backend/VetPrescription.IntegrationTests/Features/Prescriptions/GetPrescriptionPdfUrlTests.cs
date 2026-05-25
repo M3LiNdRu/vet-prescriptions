@@ -4,7 +4,8 @@ using VetPrescription.Api.Features.Prescriptions.GeneratePdf;
 
 namespace VetPrescription.IntegrationTests.Features.Prescriptions;
 
-public class GetPrescriptionPdfUrlTests : IClassFixture<TestWebApplicationFactory>
+[Collection(IntegrationTestCollection.Name)]
+public class GetPrescriptionPdfUrlTests
 {
     private readonly HttpClient _client;
 

@@ -3,7 +3,8 @@ using VetPrescription.Api.Features.Prescriptions.Create;
 
 namespace VetPrescription.IntegrationTests.Features.Prescriptions;
 
-public class CreatePrescriptionTests : IClassFixture<TestWebApplicationFactory>
+[Collection(IntegrationTestCollection.Name)]
+public class CreatePrescriptionTests
 {
     private readonly HttpClient _client;
 

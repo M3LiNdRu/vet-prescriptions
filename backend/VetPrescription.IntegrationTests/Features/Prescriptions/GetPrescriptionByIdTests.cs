@@ -4,7 +4,8 @@ using VetPrescription.Api.Features.Prescriptions.GetById;
 
 namespace VetPrescription.IntegrationTests.Features.Prescriptions;
 
-public class GetPrescriptionByIdTests : IClassFixture<TestWebApplicationFactory>
+[Collection(IntegrationTestCollection.Name)]
+public class GetPrescriptionByIdTests
 {
     private readonly HttpClient _client;
 
