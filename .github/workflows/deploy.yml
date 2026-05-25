@@ -18,9 +18,10 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
       - name: Deploy MongoDB
+        if: ${{ secrets.FLY_API_TOKEN_MONGO != '' }}
         run: flyctl deploy --config fly/mongo/fly.toml --app vet-prescription-db --remote-only
         env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN_MONGO }}
 
       - name: Deploy API
         run: flyctl deploy --config backend/fly.toml --app vet-prescription-api --remote-only
