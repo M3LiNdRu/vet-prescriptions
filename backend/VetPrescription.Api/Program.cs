@@ -4,6 +4,7 @@ using VetPrescription.Api.Features.Prescriptions.Create;
 using VetPrescription.Api.Features.Prescriptions.GeneratePdf;
 using VetPrescription.Api.Features.Prescriptions.GetById;
 using VetPrescription.Api.Features.Prescriptions.GetPrescriptionPdfUrl;
+using VetPrescription.Api.Features.Prescriptions.List;
 using VetPrescription.Api.Features.Vets.GetVetProfile;
 using VetPrescription.Api.Features.Vets.SaveVetProfile;
 using VetPrescription.Api.Infrastructure;
@@ -20,6 +21,9 @@ try
         config.ReadFrom.Configuration(ctx.Configuration));
 
     builder.Services.AddSingleton<MongoDbContext>();
+
+    builder.Services.AddScoped<IListPrescriptionsRepository, ListPrescriptionsRepository>();
+    builder.Services.AddScoped<ListPrescriptionsHandler>();
 
     builder.Services.AddScoped<ICreatePrescriptionRepository, CreatePrescriptionRepository>();
     builder.Services.AddScoped<CreatePrescriptionHandler>();
@@ -70,6 +74,7 @@ try
         app.UseSwaggerUI();
     }
 
+    ListPrescriptionsEndpoint.Map(app);
     CreatePrescriptionEndpoint.Map(app);
     GetPrescriptionByIdEndpoint.Map(app);
     GeneratePdfEndpoint.Map(app);

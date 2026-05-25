@@ -19,6 +19,37 @@ tags:
 
 paths:
   /prescriptions:
+    get:
+      operationId: listPrescriptions
+      tags: [Prescriptions]
+      summary: List all prescriptions sorted by date descending
+      responses:
+        '200':
+          description: List of prescription summaries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PrescriptionSummaryResponse'
+              example:
+                - id: "6647a2f3e4b0c1d2e3f40001"
+                  prescriptionNumber: "RX-2026-0002"
+                  date: "2026-05-17"
+                  patientName: "Rex"
+                  vetName: "Dr. Joan Puig Domènech"
+                - id: "6647a2f3e4b0c1d2e3f40000"
+                  prescriptionNumber: "RX-2026-0001"
+                  date: "2026-05-16"
+                  patientName: "Luna"
+                  vetName: "Dr. Joan Puig Domènech"
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
     post:
       operationId: createPrescription
       tags: [Prescriptions]
@@ -586,6 +617,30 @@ components:
           type: string
           description: Human-readable prescription reference
           example: "RX-2026-0001"
+
+    # ── Prescription History ───────────────────────────────────────────────
+
+    PrescriptionSummaryResponse:
+      type: object
+      description: Summary of a prescription for list views
+      required: [id, prescriptionNumber, date, patientName, vetName]
+      properties:
+        id:
+          type: string
+          example: "6647a2f3e4b0c1d2e3f40001"
+        prescriptionNumber:
+          type: string
+          example: "RX-2026-0001"
+        date:
+          type: string
+          format: date
+          example: "2026-05-17"
+        patientName:
+          type: string
+          example: "Rex"
+        vetName:
+          type: string
+          example: "Dr. Joan Puig Domènech"
 
     # ── Vet Profile ────────────────────────────────────────────────────────
 

@@ -10,6 +10,32 @@ sourceDescriptions:
     type: openapi
 
 workflows:
+  - workflowId: browse-prescription-history
+    summary: Browse prescription history and view a prescription detail
+    description: >
+      A veterinarian views the list of all past prescriptions sorted by date,
+      then selects one to view the full details.
+    steps:
+      - stepId: list-prescriptions
+        description: Fetch all prescriptions sorted by date descending
+        operationId: $sourceDescriptions.vetprescription-api#/listPrescriptions
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          prescriptions: $response.body
+
+      - stepId: get-prescription-detail
+        description: Fetch the full detail of a selected prescription
+        operationId: $sourceDescriptions.vetprescription-api#/getPrescriptionById
+        parameters:
+          - name: id
+            in: path
+            value: $steps.list-prescriptions.outputs.prescriptions[0].id
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          prescription: $response.body
+
   - workflowId: prefill-and-create-prescription
     summary: Load vet profile, pre-fill form, create prescription and download PDF
     description: >
