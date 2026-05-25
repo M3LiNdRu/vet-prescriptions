@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/M3LiNdRu/vet-prescriptions/compare/v1.1.0...v1.1.1) (2026-05-25)
+
+
+### Bug Fixes
+
+* upgrade SharpCompress to 0.48.1 to resolve NU1902 vulnerability ([2445f1b](https://github.com/M3LiNdRu/vet-prescriptions/commit/2445f1b05806035c977d02041787d99b8f43d2b7))
+
 # [1.1.0](https://github.com/M3LiNdRu/vet-prescriptions/compare/v1.0.0...v1.1.0) (2026-05-25)
 
 
